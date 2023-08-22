@@ -26,6 +26,16 @@ class Campers(Resource):
         campers = [c.to_dict(rules=("-signups",)) for c in Camper.query.all()]
         return make_response(campers, 200)
 
+    def post(self):
+        data = request.get_json()
+        try:
+            new_camper = Camper(**data)
+        except:
+            return make_response({"errors": ["validation errors"]}, 400)
+        db.session.add(new_camper)
+        db.session.commit()
+        return make_response(new_camper.to_dict(rules=("-signups",)), 201)
+
 
 api.add_resource(Campers, "/campers")
 
@@ -46,7 +56,7 @@ class CamperById(Resource):
             for attr, value in data.items():
                 setattr(camper, attr, value)
         except:
-            return make_response({"errors": ["validation erros"]})
+            return make_response({"errors": ["validation errors"]}, 400)
         db.session.add(camper)
         db.session.commit()
         return make_response(camper.to_dict(rules=("-signups",)), 202)
