@@ -37,6 +37,20 @@ class CamperById(Resource):
             return make_response({"error": "Camper not found"}, 404)
         return make_response(camper.to_dict(rules=("-signups.activity.signups",)), 200)
 
+    def patch(self, id):
+        data = request.get_json()
+        camper = Camper.query.get(id)
+        if not camper:
+            return make_response({"error": "Camper not found"}, 404)
+        try:
+            for attr, value in data.items():
+                setattr(camper, attr, value)
+        except:
+            return make_response({"errors": ["validation erros"]})
+        db.session.add(camper)
+        db.session.commit()
+        return make_response(camper.to_dict(rules=("-signups",)), 202)
+
 
 api.add_resource(CamperById, "/campers/<int:id>")
 
