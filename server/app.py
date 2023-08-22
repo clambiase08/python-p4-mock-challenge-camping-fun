@@ -74,5 +74,18 @@ class Activities(Resource):
 api.add_resource(Activities, "/activities")
 
 
+class AcivityById(Resource):
+    def delete(self, id):
+        activity = Activity.query.filter_by(id=id).first()
+        if not activity:
+            return make_response({"error": "Activity not found"}, 404)
+        db.session.delete(activity)
+        db.session.commit()
+        return make_response("", 204)
+
+
+api.add_resource(AcivityById, "/activities/<int:id>")
+
+
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
