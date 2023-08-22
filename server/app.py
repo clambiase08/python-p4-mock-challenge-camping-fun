@@ -87,5 +87,28 @@ class AcivityById(Resource):
 api.add_resource(AcivityById, "/activities/<int:id>")
 
 
+class Signups(Resource):
+    def post(self):
+        data = request.get_json()
+        try:
+            new_signup = Signup(**data)
+        except:
+            return make_response({"errors": ["validation errors"]}, 400)
+        db.session.add(new_signup)
+        db.session.commit()
+        return make_response(
+            new_signup.to_dict(
+                rules=(
+                    "-camper.signups",
+                    "-activity.signups",
+                )
+            ),
+            201,
+        )
+
+
+api.add_resource(Signups, "/signups")
+
+
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
