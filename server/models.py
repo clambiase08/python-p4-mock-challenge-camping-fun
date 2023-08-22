@@ -50,10 +50,7 @@ class Camper(db.Model, SerializerMixin):
     activities = association_proxy("signups", "activities")
 
     # Add serialization rules
-    serialize_rules = (
-        "-signups.activity",
-        "-signups.camper",
-    )
+    serialize_rules = ("-signups.camper",)
 
     # Add validation
     @validates("name")

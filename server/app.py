@@ -30,5 +30,16 @@ class Campers(Resource):
 api.add_resource(Campers, "/campers")
 
 
+class CamperById(Resource):
+    def get(self, id):
+        camper = Camper.query.get(id)
+        if not camper:
+            return make_response({"error": "Camper not found"}, 404)
+        return make_response(camper.to_dict(rules=("-signups.activity.signups",)), 200)
+
+
+api.add_resource(CamperById, "/campers/<int:id>")
+
+
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
