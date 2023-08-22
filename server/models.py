@@ -47,7 +47,7 @@ class Camper(db.Model, SerializerMixin):
 
     # Add relationship
     signups = db.relationship("Signup", backref="camper", cascade="delete")
-    activities = association_proxy("signups", "activities")
+    activities = association_proxy("signups", "activity")
 
     # Add serialization rules
     serialize_rules = ("-signups.camper",)
